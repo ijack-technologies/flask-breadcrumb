@@ -3,21 +3,16 @@
   "plugins": [
     "@semantic-release/commit-analyzer",
     "@semantic-release/release-notes-generator",
-    "semantic-release-pypi",
+    "@semantic-release/changelog",
+    "@semantic-release/git",
     "@semantic-release/github",
-    [
-      "@semantic-release/changelog",
-      {
-        "changelogFile": "CHANGELOG.md",
-        "changelogTitle": "# Semantic Versioning Changelog"
-      }
-    ],     
-	  [
-      "@semantic-release/git",
-      {
-        "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}",
-        "assets": ["CHANGELOG.md", "setup.py", "setup.cfg"]
-      }
-    ]
+    {
+      "path": "@semantic-release/exec",
+      "prepareCmd": "curl -LsSf https://astral.sh/uv/install.sh | sh && uv pip install -e . && uv pip install hatch && hatch build"
+    },
+    {
+      "path": "@semantic-release/exec",
+      "publishCmd": "twine upload --repository-url https://pypi.org/project/flask-breadcrumb dist/*"
+    }
   ]
 }
