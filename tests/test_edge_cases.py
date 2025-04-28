@@ -16,7 +16,7 @@ def empty_app():
     app.config["SERVER_NAME"] = "localhost"
 
     # Initialize Breadcrumb
-    breadcrumb_ext = Breadcrumb(app)
+    Breadcrumb(app)
 
     return app
 
