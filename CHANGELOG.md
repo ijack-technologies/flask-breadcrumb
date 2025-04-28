@@ -1,3 +1,10 @@
+## [1.0.3](https://github.com/ijack-technologies/flask-breadcrumb/compare/v1.0.2...v1.0.3) (2025-04-28)
+
+
+### Bug Fixes
+
+* updated ruff lint ([b64a0bf](https://github.com/ijack-technologies/flask-breadcrumb/commit/b64a0bf6acbfb35e524ebbf2d93ca3ff12a9a6d1))
+
 ## [1.0.2](https://github.com/ijack-technologies/flask-breadcrumb/compare/v1.0.1...v1.0.2) (2025-04-28)
 
 
