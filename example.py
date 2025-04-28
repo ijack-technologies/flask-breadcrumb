@@ -44,7 +44,6 @@ base_template = """
 
 # Home page
 @app.route("/")
-@breadcrumb("Home", order=0)
 def index():
     """Home page with a simple breadcrumb."""
     title = "Home"
@@ -76,9 +75,9 @@ def index():
 
 
 @app.route("/categories/<category>/products")
-@breadcrumb("Categories", order=0)
+@breadcrumb("Categories")
 def products(category):
-    breadcrumb_json = get_breadcrumbs()
+    breadcrumb_json = get_breadcrumbs(use_root=True)
 
     # Print the breadcrumbs to the console
     print(f"\n=== Breadcrumbs for {request.path} ===")
@@ -92,7 +91,7 @@ def products(category):
 
 
 @app.route("/categories/<category>/sales")
-@breadcrumb("Categories", order=0)
+@breadcrumb("Categories")
 def sales(category):
     breadcrumb_json = get_breadcrumbs()
 
@@ -108,7 +107,7 @@ def sales(category):
 
 
 @app.route("/categories/<category>/products/<product>")
-@breadcrumb("Categories", order=0)
+@breadcrumb("Categories")
 def product(category, product):
     breadcrumb_json = get_breadcrumbs()
 
@@ -124,7 +123,7 @@ def product(category, product):
 
 
 @app.route("/categories/<category>")
-@breadcrumb("Categories", order=0)
+@breadcrumb("Categories")
 def category(category):
     breadcrumb_json = get_breadcrumbs()
 
@@ -140,7 +139,7 @@ def category(category):
 
 
 @app.route("/categories")
-@breadcrumb("Categories", order=0)
+@breadcrumb("Categories")
 def categories():
     breadcrumb_json = get_breadcrumbs()
 
