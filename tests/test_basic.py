@@ -16,9 +16,6 @@ def test_basic_breadcrumb(base_app):
     def index():
         return "Home"
 
-    # Create a test client
-    client = base_app.test_client()
-
     # Make a request to the route
     with base_app.test_request_context("/categories"):
         # Get the breadcrumbs
