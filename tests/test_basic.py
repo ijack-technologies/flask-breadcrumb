@@ -12,7 +12,7 @@ def test_basic_breadcrumb(base_app):
 
     # Create a simple route with a breadcrumb
     @base_app.route("/categories")
-    @breadcrumb("Categories", order=0)
+    @breadcrumb("Categories")
     def index():
         return "Home"
 

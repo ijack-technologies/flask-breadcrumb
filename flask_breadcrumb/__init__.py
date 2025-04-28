@@ -180,7 +180,7 @@ class Breadcrumb:
         routes = list(
             filter(
                 lambda x: ("GET" in x.methods or str(x) == str(request.url_rule))
-                and x.endpoint != "static",
+                and x.endpoint in self.breadcrumb_metadata,
                 current_app.url_map.iter_rules(),
             )
         )
@@ -224,8 +224,7 @@ class Breadcrumb:
                 )
                 for x in list(
                     filter(
-                        lambda x: parse(x, x.arguments, search_url)
-                        and x.endpoint in self.breadcrumb_metadata,
+                        lambda x: parse(x, x.arguments, search_url),
                         routes,
                     )
                 )
