@@ -97,5 +97,5 @@ jobs:
         if: github.event_name == 'push'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PYPI_TOKEN: ${{ secrets.GITHUB_TOKEN}}
+          PYPI_TOKEN: ${{ secrets.PYPI_TOKEN}}
         run: npx semantic-release
