@@ -193,8 +193,6 @@ class Breadcrumb:
         for i, crumb in enumerate(crumbs):
             if not crumb:
                 continue
-            if i == len(crumbs) - 1:
-                continue
             crumbs[i] = "/" + crumb
             search_url = "".join(crumbs[: i + 1])
 
