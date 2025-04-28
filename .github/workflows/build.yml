@@ -83,7 +83,7 @@ jobs:
           node-version: "20"
 
       - name: Setup
-        run: npm install -g semantic-release @semantic-release/github @semantic-release/exec @semantic-release/changelog @semantic-release/commit-analyzer @semantic-release/git @semantic-release/release-notes-generator
+        run: npm install -g semantic-release @semantic-release/github @semantic-release/changelog @semantic-release/commit-analyzer @semantic-release/git @semantic-release/release-notes-generator semantic-release-pypi
 
       - name: Set up Python with uv ${{ matrix.python-version }}
         uses: astral-sh/setup-uv@v5
@@ -97,5 +97,5 @@ jobs:
         if: github.event_name == 'push'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PYPI_TOKEN: "test"
+          PYPI_TOKEN: ${{ secrets.GITHUB_TOKEN}}
         run: npx semantic-release
