@@ -1,3 +1,10 @@
+## [1.0.2](https://github.com/ijack-technologies/flask-breadcrumb/compare/v1.0.1...v1.0.2) (2025-04-28)
+
+
+### Bug Fixes
+
+* updated tests and documentation ([2828481](https://github.com/ijack-technologies/flask-breadcrumb/commit/2828481868c2f104570c3abf0dbe2a07c0c08d3d))
+
 ## [1.0.1](https://github.com/ijack-technologies/flask-breadcrumb/compare/v1.0.0...v1.0.1) (2025-04-28)
 
 
