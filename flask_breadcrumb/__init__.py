@@ -3,7 +3,7 @@
 import json
 import re
 from functools import wraps
-from typing import Any, Callable, Dict, Optional, Union
+from typing import Any, Callable, Dict, Union
 from urllib.parse import urlparse
 
 from flask import current_app, request
