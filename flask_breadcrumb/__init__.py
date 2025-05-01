@@ -135,12 +135,13 @@ class Breadcrumb:
 
         return self
 
-    def __call__(self, text, max_depth=None):
+    def __call__(self, text, endpoint_prefix=None):
         """Decorator to register a view function as a breadcrumb.
 
         Args:
             text: Text to display for the breadcrumb or a function that returns the text
-            max_depth: Maximum depth to traverse up the breadcrumb tree
+            endpoint_prefix: Optional prefix to prepend to the endpoint (useful for blueprints)\n
+            if using blueprints supply the name of the blueprint as endpoint_prefix
 
         Returns:
             Decorator function
@@ -148,31 +149,26 @@ class Breadcrumb:
 
         def decorator(f):
             # Store metadata about this route's breadcrumb
-            endpoint = f.__name__
-            self.breadcrumb_metadata[endpoint] = {
+            func_endpoint = f.__name__
+            self.breadcrumb_metadata[func_endpoint] = {
                 "text": text
                 if text is not None
-                else endpoint.title().replace("_", " "),
+                else func_endpoint.title().replace("_", " "),
+            }
+            # If endpoint_prefix is provided, use it to create the full endpoint name
+            if endpoint_prefix:
+                full_endpoint = f"{endpoint_prefix}.{func_endpoint}"
+            else:
+                full_endpoint = func_endpoint
+
+            self.breadcrumb_metadata[full_endpoint] = {
+                "text": text
+                if text is not None
+                else func_endpoint.title().replace("_", " "),
             }
 
             @wraps(f)
             def decorated_function(*args, **kwargs):
-                # Get the full endpoint including blueprint name
-                if request.endpoint and request.endpoint != endpoint:
-                    # This means we have a blueprint prefix
-                    self.breadcrumb_metadata[request.endpoint] = (
-                        self.breadcrumb_metadata.pop(
-                            endpoint,
-                            self.breadcrumb_metadata.get(
-                                request.endpoint,
-                                {
-                                    "text": text
-                                    if text is not None
-                                    else endpoint.title().replace("_", " ")
-                                },
-                            ),
-                        )
-                    )
                 return f(*args, **kwargs)
 
             return decorated_function
