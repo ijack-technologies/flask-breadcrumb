@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.0.5](https://github.com/ijack-technologies/flask-breadcrumb/compare/v1.0.4...v1.0.5) (2025-05-01)
+
+
+### Bug Fixes
+
+* version bump ([6dbcd02](https://github.com/ijack-technologies/flask-breadcrumb/commit/6dbcd02129c4c213e709b15663c9b041db1d250c))
+
 ## [1.0.4](https://github.com/ijack-technologies/flask-breadcrumb/compare/v1.0.3...v1.0.4) (2025-04-28)
 
 
