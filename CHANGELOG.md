@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.0.7](https://github.com/ijack-technologies/flask-breadcrumb/compare/v1.0.6...v1.0.7) (2025-05-01)
+
+
+### Bug Fixes
+
+* [@breadcrumb](https://github.com/breadcrumb)() now takes endpoint_prefilx for blueprint compatibility ([37d76e3](https://github.com/ijack-technologies/flask-breadcrumb/commit/37d76e303aed8de160bb2baf68c595d45e811f6e))
+
 ## [1.0.6](https://github.com/ijack-technologies/flask-breadcrumb/compare/v1.0.5...v1.0.6) (2025-05-01)
 
 
