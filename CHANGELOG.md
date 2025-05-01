@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.0.6](https://github.com/ijack-technologies/flask-breadcrumb/compare/v1.0.5...v1.0.6) (2025-05-01)
+
+
+### Bug Fixes
+
+* update breadcrumb metadata to track blueprints. ([83375ee](https://github.com/ijack-technologies/flask-breadcrumb/commit/83375eedbfdb7bf77bf46fa128e2c44b6789a4a1))
+
 ## [1.0.5](https://github.com/ijack-technologies/flask-breadcrumb/compare/v1.0.4...v1.0.5) (2025-05-01)
 
 
