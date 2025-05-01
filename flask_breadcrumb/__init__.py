@@ -157,6 +157,22 @@ class Breadcrumb:
 
             @wraps(f)
             def decorated_function(*args, **kwargs):
+                # Get the full endpoint including blueprint name
+                if request.endpoint and request.endpoint != endpoint:
+                    # This means we have a blueprint prefix
+                    self.breadcrumb_metadata[request.endpoint] = (
+                        self.breadcrumb_metadata.pop(
+                            endpoint,
+                            self.breadcrumb_metadata.get(
+                                request.endpoint,
+                                {
+                                    "text": text
+                                    if text is not None
+                                    else endpoint.title().replace("_", " ")
+                                },
+                            ),
+                        )
+                    )
                 return f(*args, **kwargs)
 
             return decorated_function
