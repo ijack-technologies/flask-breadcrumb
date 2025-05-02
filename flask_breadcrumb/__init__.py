@@ -282,7 +282,7 @@ class Breadcrumb:
         return route_map.to_dict() if isinstance(route_map, BreadcrumbItem) else {}
 
 
-def get_breadcrumbs(url=None, max_depth=None, use_root=False):
+def get_breadcrumbs(url=None, max_depth=None, use_root=False, as_str=False):
     """Get the breadcrumb tree for a specific URL.
 
     Args:
@@ -307,4 +307,6 @@ def get_breadcrumbs(url=None, max_depth=None, use_root=False):
         # Create a test request context with the provided URL
         with current_app.test_request_context(url):
             tree = extension.parse()
+    if as_str:
+        return json.dumps(tree, indent=2)
     return tree

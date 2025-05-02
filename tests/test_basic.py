@@ -19,7 +19,7 @@ def test_basic_breadcrumb(base_app):
     # Make a request to the route
     with base_app.test_request_context("/categories"):
         # Get the breadcrumbs
-        breadcrumbs = get_breadcrumbs()
+        breadcrumbs = get_breadcrumbs(as_str=True)
         breadcrumb_data = json.loads(breadcrumbs)
 
         # Verify the breadcrumb data

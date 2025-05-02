@@ -61,7 +61,7 @@ def test_empty_app(empty_app):
     """Test breadcrumb with no routes."""
     with empty_app.test_request_context("/"):
         empty_app.preprocess_request()
-        breadcrumbs = get_breadcrumbs()
+        breadcrumbs = get_breadcrumbs(as_str=True)
 
         # Should return empty JSON object
         assert breadcrumbs == "{}"
@@ -71,7 +71,7 @@ def test_route_without_decorator(app_with_error_routes):
     """Test route without breadcrumb decorator."""
     with app_with_error_routes.test_request_context("/"):
         app_with_error_routes.preprocess_request()
-        breadcrumbs = get_breadcrumbs()
+        breadcrumbs = get_breadcrumbs(as_str=True)
 
         # Should return empty JSON object
         assert breadcrumbs == "{}"
@@ -83,7 +83,7 @@ def test_error_in_breadcrumb_function(app_with_error_routes):
         app_with_error_routes.preprocess_request()
         try:
             # Should not raise exception, but return empty breadcrumbs
-            breadcrumbs = get_breadcrumbs()
+            breadcrumbs = get_breadcrumbs(as_str=True)
             assert breadcrumbs == "{}"
         except ZeroDivisionError:
             # If the extension doesn't handle the error, we'll catch it here
@@ -95,7 +95,7 @@ def test_none_text_in_breadcrumb(app_with_error_routes):
     """Test None as text in breadcrumb."""
     with app_with_error_routes.test_request_context("/none"):
         app_with_error_routes.preprocess_request()
-        breadcrumbs = json.loads(get_breadcrumbs())
+        breadcrumbs = json.loads(get_breadcrumbs(as_str=True))
 
         # Should use endpoint name as text
         assert breadcrumbs["text"] == "None Text"
@@ -105,7 +105,7 @@ def test_missing_view_args(app_with_error_routes):
     """Test missing view args in dynamic breadcrumb."""
     with app_with_error_routes.test_request_context("/dynamic/test"):
         app_with_error_routes.preprocess_request()
-        breadcrumbs = json.loads(get_breadcrumbs())
+        breadcrumbs = json.loads(get_breadcrumbs(as_str=True))
 
         # Should use default value
         assert breadcrumbs["text"] == "Dynamic default"
@@ -115,7 +115,7 @@ def test_non_existent_url(empty_app):
     """Test getting breadcrumbs for a non-existent URL."""
     with empty_app.test_request_context("/"):
         empty_app.preprocess_request()
-        breadcrumbs = get_breadcrumbs("/non-existent")
+        breadcrumbs = get_breadcrumbs("/non-existent", as_str=True)
 
         # Should return empty JSON object
         assert breadcrumbs == "{}"
@@ -137,14 +137,14 @@ def test_init_app_separately():
 
     with app.test_request_context("/"):
         app.preprocess_request()
-        breadcrumbs_str = get_breadcrumbs()
+        breadcrumbs_str = get_breadcrumbs(as_str=True)
 
         # The root path might not have breadcrumbs if use_root=False (default)
         # So we expect an empty JSON object
         assert breadcrumbs_str == "{}"
 
         # With use_root=True, we should get some breadcrumbs
-        breadcrumbs_str = get_breadcrumbs(use_root=True)
+        breadcrumbs_str = get_breadcrumbs(as_str=True, use_root=True)
         assert isinstance(breadcrumbs_str, str)
         breadcrumbs = json.loads(breadcrumbs_str)
         assert isinstance(breadcrumbs, dict)
@@ -157,7 +157,7 @@ def test_no_extension():
 
     with app.test_request_context("/"):
         app.preprocess_request()
-        breadcrumbs = get_breadcrumbs()
+        breadcrumbs = get_breadcrumbs(as_str=True)
 
         # Should return empty JSON object
         assert breadcrumbs == "{}"

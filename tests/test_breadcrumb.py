@@ -72,7 +72,7 @@ def test_root_breadcrumb(app):
     """Test breadcrumb for root path."""
     with app.test_request_context("/"):
         app.preprocess_request()
-        breadcrumbs = get_breadcrumbs()
+        breadcrumbs = get_breadcrumbs(as_str=True)
 
         # The root path might not have breadcrumbs if use_root=False (default)
         # So we expect an empty JSON object
@@ -83,7 +83,7 @@ def test_simple_path_breadcrumb(app):
     """Test breadcrumb for a simple path."""
     with app.test_request_context("/path1"):
         app.preprocess_request()
-        breadcrumbs = json.loads(get_breadcrumbs())
+        breadcrumbs = json.loads(get_breadcrumbs(as_str=True))
 
         assert breadcrumbs["text"] == "Path 1"
         assert breadcrumbs["url"] == "/path1"
@@ -94,7 +94,7 @@ def test_nested_path_breadcrumb(app):
     """Test breadcrumb for a nested path."""
     with app.test_request_context("/path1/subpath"):
         app.preprocess_request()
-        breadcrumbs = json.loads(get_breadcrumbs())
+        breadcrumbs = json.loads(get_breadcrumbs(as_str=True))
 
         # Based on the actual implementation, the parent path is returned
         assert breadcrumbs["text"] == "Path 1"
@@ -109,7 +109,7 @@ def test_dynamic_path_breadcrumb(app):
     """Test breadcrumb for a path with dynamic parameters."""
     with app.test_request_context("/categories/test"):
         app.preprocess_request()
-        breadcrumbs = json.loads(get_breadcrumbs())
+        breadcrumbs = json.loads(get_breadcrumbs(as_str=True))
 
         # Based on the actual implementation, the parent path is returned
         assert breadcrumbs["text"] == "Categories"
@@ -124,7 +124,7 @@ def test_deeply_nested_path_breadcrumb(app):
     """Test breadcrumb for a deeply nested path with dynamic parameters."""
     with app.test_request_context("/categories/test/products"):
         app.preprocess_request()
-        breadcrumbs = json.loads(get_breadcrumbs())
+        breadcrumbs = json.loads(get_breadcrumbs(as_str=True))
 
         # Based on the actual implementation, the parent path is returned
         assert breadcrumbs["text"] == "Categories"
@@ -139,7 +139,7 @@ def test_deeply_nested_path_breadcrumb(app):
 #     """Test breadcrumb for a deeply nested path with dynamic parameters."""
 #     with app.test_request_context("path1/subpath"):
 #         app.preprocess_request()
-#         breadcrumbs = json.loads(get_breadcrumbs())
+#         breadcrumbs = json.loads(get_breadcrumbs(as_str=True))
 
 #         # Based on the actual implementation, the parent path is returned
 #         assert breadcrumbs["text"] == "Categories"
@@ -154,7 +154,7 @@ def test_get_breadcrumbs_for_different_url(app):
     """Test getting breadcrumbs for a URL different from the current request."""
     with app.test_request_context("/"):
         app.preprocess_request()
-        breadcrumbs = json.loads(get_breadcrumbs("/path1"))
+        breadcrumbs = get_breadcrumbs("/path1")
 
         assert breadcrumbs["text"] == "Path 1"
         assert breadcrumbs["url"] == "/path1"
@@ -166,7 +166,7 @@ def test_breadcrumb_with_max_depth(app):
     with app.test_request_context("/categories/test/products"):
         app.preprocess_request()
         # Set max_depth to 1 to limit the breadcrumb depth
-        breadcrumbs_str = get_breadcrumbs(max_depth=1)
+        breadcrumbs_str = get_breadcrumbs(as_str=True, max_depth=1)
 
         # The implementation might handle max_depth differently
         # It could return an empty object if no breadcrumbs match the criteria
@@ -182,7 +182,7 @@ def test_breadcrumb_with_use_root(app):
     with app.test_request_context("/categories/test"):
         app.preprocess_request()
         # Set use_root to True to include the root in the breadcrumb
-        breadcrumbs_str = get_breadcrumbs(use_root=True)
+        breadcrumbs_str = get_breadcrumbs(as_str=True, use_root=True)
 
         # The implementation might handle use_root differently
         # It could include the root path in the breadcrumbs
