@@ -34,6 +34,11 @@ def app():
     def subpath():
         return "Subpath"
 
+    @app.route("/path1/subpath2")
+    @breadcrumb_ext("Subpath")
+    def subpath2_path1():
+        return "Subpath"
+
     @app.route("/path2")
     @breadcrumb_ext("Path 2")
     def path2():
@@ -128,6 +133,21 @@ def test_deeply_nested_path_breadcrumb(app):
 
         # The implementation might include children, but we don't test that here
         # as it depends on the specific implementation
+
+
+# def test_deeply_nested_path_breadcrumb_similar(app):
+#     """Test breadcrumb for a deeply nested path with dynamic parameters."""
+#     with app.test_request_context("path1/subpath"):
+#         app.preprocess_request()
+#         breadcrumbs = json.loads(get_breadcrumbs())
+
+#         # Based on the actual implementation, the parent path is returned
+#         assert breadcrumbs["text"] == "Categories"
+#         assert breadcrumbs["url"] == "/categories"
+#         assert breadcrumbs["is_current_path"] is True
+
+#         # The implementation might include children, but we don't test that here
+#         # as it depends on the specific implementation
 
 
 def test_get_breadcrumbs_for_different_url(app):

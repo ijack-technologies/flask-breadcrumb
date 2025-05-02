@@ -46,20 +46,24 @@ class BreadcrumbItem:
             "children": [child.to_dict() for child in self.children],
         }
 
-    def add(self, breadcrumb: "BreadcrumbItem") -> None:
+    def add(self, breadcrumb: "BreadcrumbItem", extras=[]) -> None:
         """Check the breadcrumb and add it to the tree.
 
         Args:
             breadcrumb: Breadcrumb item to add
         """
+        # while len(extras) != 0:
+        #     (self, _) = breadcrumb.add(extras[0], extras[1:] or [])
         if self.is_child(breadcrumb):
             self.add_child(breadcrumb)
         elif self.is_parent(breadcrumb):
-            return self.make_parent(breadcrumb)
+            return (self.make_parent(breadcrumb), extras)
+        elif self.is_sibling(breadcrumb):
+            return (self, extras + [breadcrumb])
         else:
             for child in self.children:
-                child.add(breadcrumb)
-        return self
+                (self, extras) = child.add(breadcrumb, extras)
+        return (self, extras)
 
     def is_child(self, breadcrumb: "BreadcrumbItem") -> bool:
         """Check if a breadcrumb is a child of this one.
@@ -70,7 +74,9 @@ class BreadcrumbItem:
         Returns:
             True if the breadcrumb is a child, False otherwise
         """
-        return breadcrumb.url.startswith(self.url) and breadcrumb.url != self.url
+        if self.url == "/" and len(breadcrumb.url.split("/")) == 2:
+            return True
+        return self.url.split("/") == breadcrumb.url.split("/")[:-1]
 
     def is_parent(self, breadcrumb: "BreadcrumbItem") -> bool:
         """Check if a breadcrumb is a parent of this one.
@@ -81,7 +87,9 @@ class BreadcrumbItem:
         Returns:
             True if the breadcrumb is a parent, False otherwise
         """
-        return self.url.startswith(breadcrumb.url) and breadcrumb.url != self.url
+        if breadcrumb.url == "/" and len(self.url.split("/")) == 2:
+            return True
+        return self.url.split("/")[:-1] == breadcrumb.url.split("/")
 
     def add_child(self, child: "BreadcrumbItem") -> None:
         """Add a child breadcrumb item.
@@ -105,6 +113,20 @@ class BreadcrumbItem:
         """
         parent.add_child(self)
         return parent
+
+    def is_sibling(self, sibling: "BreadcrumbItem") -> bool:
+        """Check if a breadcrumb is a sibling of this one.
+
+        Args:
+            sibling: Breadcrumb item to check
+
+        Returns:
+            True if the breadcrumb is a sibling, False otherwise
+        """
+        return (
+            self.url.split("/")[:-1] == sibling.url.split("/")[:-1]
+            and self.url != sibling.url
+        )
 
 
 class Breadcrumb:
@@ -218,7 +240,10 @@ class Breadcrumb:
                 if not startswith:
                     return False
                 remaining = str(route_path)[len(base_url) :]
-                if len(list(filter(None, remaining.split("/")))) > 1:
+                if (
+                    len(list(filter(None, remaining.split("/")))) > 1
+                    and re.match(".*/<.+?>.*", remaining) is not None
+                ):
                     return False
                 curr_args = request.url_rule.arguments
                 if not args.issubset(curr_args):
@@ -243,12 +268,16 @@ class Breadcrumb:
             ]
         route_map = {}
         breadcrumbs.reverse()
+        extras = []
         for b in breadcrumbs:
             if route_map == {}:
                 route_map = b
                 continue
             else:
-                route_map = route_map.add(b)
+                (route_map, extras) = route_map.add(b, extras=extras)
+
+        for extra in extras:
+            route_map.add_child(extra)
 
         return route_map.to_dict() if isinstance(route_map, BreadcrumbItem) else {}
 
