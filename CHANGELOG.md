@@ -1,5 +1,13 @@
 # Semantic Versioning Changelog
 
+## [1.0.9](https://github.com/ijack-technologies/flask-breadcrumb/compare/v1.0.8...v1.0.9) (2025-05-02)
+
+
+### Bug Fixes
+
+* return the tree from get_breadcrumbs as dict not string json ([2b3ddcb](https://github.com/ijack-technologies/flask-breadcrumb/commit/2b3ddcb70263d277d04a5d90542dbf273b43b487))
+* update tests for json strings ([fbecea2](https://github.com/ijack-technologies/flask-breadcrumb/commit/fbecea2a309dacadcaac8d513e3bc83c5fac31d9))
+
 ## [1.0.8](https://github.com/ijack-technologies/flask-breadcrumb/compare/v1.0.7...v1.0.8) (2025-05-02)
 
 
