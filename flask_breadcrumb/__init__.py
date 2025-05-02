@@ -307,6 +307,4 @@ def get_breadcrumbs(url=None, max_depth=None, use_root=False):
         # Create a test request context with the provided URL
         with current_app.test_request_context(url):
             tree = extension.parse()
-
-    # Return the tree as a JSON string
-    return json.dumps(tree, indent=2)
+    return tree
