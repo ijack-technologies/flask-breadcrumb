@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.0.8](https://github.com/ijack-technologies/flask-breadcrumb/compare/v1.0.7...v1.0.8) (2025-05-02)
+
+
+### Bug Fixes
+
+* breadcrumb siblings should match if no params <> are in the url ([af97e1c](https://github.com/ijack-technologies/flask-breadcrumb/commit/af97e1cb5236b64697a83a39d0e5f04afcce5d57))
+
 ## [1.0.7](https://github.com/ijack-technologies/flask-breadcrumb/compare/v1.0.6...v1.0.7) (2025-05-01)
 
 
