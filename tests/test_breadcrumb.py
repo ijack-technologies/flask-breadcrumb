@@ -59,6 +59,36 @@ def app():
     def products_page(category):
         return f"Products for {category}"
 
+    @app.route("/test/hello/bar")
+    @breadcrumb_ext("Products")
+    def test1():
+        return "bar"
+
+    @app.route("/test/hello/foo")
+    @breadcrumb_ext("Products")
+    def test2():
+        return "foo"
+
+    @app.route("/common")
+    @breadcrumb_ext("Common")
+    def common():
+        return "common"
+
+    @app.route("/common/distance/one")
+    @breadcrumb_ext("One")
+    def common1():
+        return "one"
+
+    @app.route("/common/distance/two")
+    @breadcrumb_ext("Two")
+    def common2():
+        return "two"
+
+    @app.route("/common/parent/distance/two")
+    @breadcrumb_ext("Two")
+    def common4():
+        return "two"
+
     return app
 
 
@@ -189,6 +219,101 @@ def test_breadcrumb_with_use_root(app):
         # Let's just check that it returns a valid JSON string
         assert isinstance(breadcrumbs_str, str)
         breadcrumbs = json.loads(breadcrumbs_str)
+        assert isinstance(breadcrumbs, dict)
+
+        # With use_root=True, we should get some breadcrumbs
+        # but the exact structure depends on the implementation
+        assert breadcrumbs != {}
+
+
+def test_breadcrumb_with_similar_paths(app):
+    """Test breadcrumb with use_root parameter."""
+    with app.test_request_context("/test/hello/bar"):
+        app.preprocess_request()
+        # Set use_root to True to include the root in the breadcrumb
+        breadcrumbs_str = get_breadcrumbs(as_str=True)
+
+        # The implementation might handle use_root differently
+        # It could include the root path in the breadcrumbs
+        # Let's just check that it returns a valid JSON string
+        assert isinstance(breadcrumbs_str, str)
+        breadcrumbs = json.loads(breadcrumbs_str)
+        assert breadcrumbs == {
+            "text": "Products",
+            "url": "/test/hello/bar",
+            "is_current_path": True,
+            "children": [],
+        }
+        assert isinstance(breadcrumbs, dict)
+
+        # With use_root=True, we should get some breadcrumbs
+        # but the exact structure depends on the implementation
+        assert breadcrumbs != {}
+
+
+def test_breadcrumb_with_similar_paths_and_parent(app):
+    """Test breadcrumb with use_root parameter."""
+    with app.test_request_context("/common/distance/one"):
+        app.preprocess_request()
+        # Set use_root to True to include the root in the breadcrumb
+        breadcrumbs_str = get_breadcrumbs(as_str=True)
+
+        # The implementation might handle use_root differently
+        # It could include the root path in the breadcrumbs
+        # Let's just check that it returns a valid JSON string
+        assert isinstance(breadcrumbs_str, str)
+        breadcrumbs = json.loads(breadcrumbs_str)
+        assert breadcrumbs == {
+            "text": "Common",
+            "url": "/common",
+            "is_current_path": True,
+            "children": [
+                {
+                    "text": "One",
+                    "url": "/common/distance/one",
+                    "is_current_path": True,
+                    "children": [],
+                },
+                {
+                    "text": "Two",
+                    "url": "/common/distance/two",
+                    "is_current_path": False,
+                    "children": [],
+                },
+            ],
+        }
+        assert isinstance(breadcrumbs, dict)
+
+        # With use_root=True, we should get some breadcrumbs
+        # but the exact structure depends on the implementation
+        assert breadcrumbs != {}
+
+
+def test_breadcrumb_with_similar_paths_and_distant_parent(app):
+    """Test breadcrumb with use_root parameter."""
+    with app.test_request_context("/common/parent/distance/two"):
+        app.preprocess_request()
+        # Set use_root to True to include the root in the breadcrumb
+        breadcrumbs_str = get_breadcrumbs(as_str=True)
+
+        # The implementation might handle use_root differently
+        # It could include the root path in the breadcrumbs
+        # Let's just check that it returns a valid JSON string
+        assert isinstance(breadcrumbs_str, str)
+        breadcrumbs = json.loads(breadcrumbs_str)
+        assert breadcrumbs == {
+            "text": "Common",
+            "url": "/common",
+            "is_current_path": True,
+            "children": [
+                {
+                    "text": "Two",
+                    "url": "/common/parent/distance/two",
+                    "is_current_path": True,
+                    "children": [],
+                },
+            ],
+        }
         assert isinstance(breadcrumbs, dict)
 
         # With use_root=True, we should get some breadcrumbs

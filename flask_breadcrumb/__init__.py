@@ -74,9 +74,13 @@ class BreadcrumbItem:
         Returns:
             True if the breadcrumb is a child, False otherwise
         """
-        if self.url == "/" and len(breadcrumb.url.split("/")) == 2:
+        self_split = self.url.split("/")
+        breadcrumb_split = breadcrumb.url.split("/")
+        if self.url == "/" and len(breadcrumb_split) == 2:
             return True
-        return self.url.split("/") == breadcrumb.url.split("/")[:-1]
+        if self_split == breadcrumb_split[: len(self_split)]:
+            return True
+        return False
 
     def is_parent(self, breadcrumb: "BreadcrumbItem") -> bool:
         """Check if a breadcrumb is a parent of this one.
@@ -87,9 +91,13 @@ class BreadcrumbItem:
         Returns:
             True if the breadcrumb is a parent, False otherwise
         """
-        if breadcrumb.url == "/" and len(self.url.split("/")) == 2:
+        self_split = self.url.split("/")
+        breadcrumb_split = breadcrumb.url.split("/")
+        if breadcrumb.url == "/" and len(self_split) == 2:
             return True
-        return self.url.split("/")[:-1] == breadcrumb.url.split("/")
+        if breadcrumb_split == self_split[: len(breadcrumb_split)]:
+            return True
+        return False
 
     def add_child(self, child: "BreadcrumbItem") -> None:
         """Add a child breadcrumb item.
@@ -98,12 +106,21 @@ class BreadcrumbItem:
             child: Child breadcrumb item to add
         """
         # Check if child is already in children
+        child_of = []
+        new_children = []
         for existing_child in self.children:
             if existing_child.url == child.url:
-                return
-        self.children.append(child)
-        # Sort children by url
-        self.children.sort(key=lambda x: x.url)
+                continue
+            if existing_child.is_child(child):
+                child_of.append(existing_child)
+            else:
+                new_children.append(existing_child)
+        for new_child in child_of:
+            (child, _) = child.add(new_child)
+        if self.url != child.url:
+            self.children = [child, *new_children]
+            # Sort children by url
+            self.children.sort(key=lambda x: x.url)
 
     def make_parent(self, parent: "BreadcrumbItem") -> None:
         """Add a parent breadcrumb item.
@@ -277,7 +294,7 @@ class Breadcrumb:
                 (route_map, extras) = route_map.add(b, extras=extras)
 
         for extra in extras:
-            route_map.add_child(extra)
+            route_map.add(extra)
 
         return route_map.to_dict() if isinstance(route_map, BreadcrumbItem) else {}
 
