@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.0.10](https://github.com/ijack-technologies/flask-breadcrumb/compare/v1.0.9...v1.0.10) (2025-05-03)
+
+
+### Bug Fixes
+
+* update to algorithm for parent-child ([ce73ccb](https://github.com/ijack-technologies/flask-breadcrumb/commit/ce73ccb787f0795a479543b6ede472d82505e6a2))
+
 ## [1.0.9](https://github.com/ijack-technologies/flask-breadcrumb/compare/v1.0.8...v1.0.9) (2025-05-02)
 
 
