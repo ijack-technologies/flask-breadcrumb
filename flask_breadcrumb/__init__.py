@@ -11,7 +11,6 @@ from flask import current_app, request
 __all__ = [
     "Breadcrumb",
     "breadcrumb",
-    "breadcrumb_tree",
     "get_breadcrumbs",
 ]
 
@@ -171,6 +170,7 @@ class Breadcrumb:
             app.extensions = {}
 
         app.extensions["breadcrumb"] = self
+        app.jinja_env.globals["get_breadcrumbs"] = get_breadcrumbs
 
         return self
 

@@ -1,9 +1,10 @@
 """Tests for Flask-Breadcrumb extension."""
 
 import json
+import textwrap
 
 import pytest
-from flask import Flask, request
+from flask import Flask, render_template_string, request
 
 from flask_breadcrumb import Breadcrumb, get_breadcrumbs
 
@@ -319,3 +320,37 @@ def test_breadcrumb_with_similar_paths_and_distant_parent(app):
         # With use_root=True, we should get some breadcrumbs
         # but the exact structure depends on the implementation
         assert breadcrumbs != {}
+
+
+def test_breadcrumb_in_template(app):
+    with app.test_request_context("/common/parent/distance/two"):
+        breadcrumbs = render_template_string("""
+            {% set crumbs = get_breadcrumbs() %}
+            <nav aria-label="breadcrumb">
+              <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                  <a href="{{ crumbs.url }}">{{ crumbs.text }}</a>
+                </li>
+                {% for child in crumbs.children recursive %} {%- if child.is_current_path -%}
+                <li class="breadcrumb-item active" aria-current="page">{{ child.text }}</li>
+                {%- else -%}
+                <li class="breadcrumb-item">
+                  <a href="{{ child.url }}">{{ child.text }}</a>
+                </li>
+                {%- endif -%}
+                {%- if child.children -%} {{ loop(child.children) }} {%- endif -%}
+                {% endfor %}
+              </ol>
+            </nav>
+        """)
+
+        assert textwrap.dedent(breadcrumbs).strip().splitlines() == [
+            '<nav aria-label="breadcrumb">',
+            '  <ol class="breadcrumb">',
+            '    <li class="breadcrumb-item">',
+            '      <a href="/common">Common</a>',
+            "    </li>",
+            '    <li class="breadcrumb-item active" aria-current="page">Two</li>',
+            "  </ol>",
+            "</nav>",
+        ]

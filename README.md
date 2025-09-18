@@ -158,7 +158,7 @@ The breadcrumb tree is returned as a JSON string with the following structure:
 Here's an example of how to render breadcrumbs in a Jinja2 template:
 
 ```html
-{% set crumbs = breadcrumb_tree() %}
+{% set crumbs = get_breadcrumbs() %}
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
     <li class="breadcrumb-item">
